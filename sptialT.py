@@ -451,3 +451,11 @@ sq.pl.spatial_scatter(
     frameon=False,
     wspace=0.5,
 )
+
+thisdict = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+x = thisdict.items()
+print(x)
