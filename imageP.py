@@ -289,5 +289,56 @@ sq.pl.ligrec(
     swap_axes=True,
 )
 
+#---------------------------------------
+# Feature extraction using CellProfiler
+#---------------------------------------
+import itertools
+from pathlib import Path
+from PIL import Image
 
+# load the pre-processed dataset
+img = sq.datasets.visium_fluo_image_crop()
+adata = sq.datasets.visium_fluo_adata_crop()
+sq.pl.spatial_scatter(adata, color="cluster")
+
+### Create some arbitrary empty base directory
+BASE_DIR = "./squidpy_tutorial_cellprofiler/"
+imgs_dir = BASE_DIR + "tmp_imgs/"
+Path(imgs_dir).mkdir(parents=True, exist_ok=True)
+
+### Image segmentation
+sq.im.process(
+    img=img,
+    layer="image",
+    method="smooth",
+    sigma=[2, 2, 0, 0],
+)
+
+sq.im.segment(
+    img=img, layer="image_smooth", method="watershed", channel_ids=0, chunks=1000
+)
+
+# plot the resulting segmentation
+fig, ax = plt.subplots(1, 2)
+img_crop = img.crop_corner(2000, 2000, size=500)
+img_crop.show(layer="image", channel=0, ax=ax[0])
+img_crop.show(
+    layer="segmented_watershed",
+    channel=0,
+    ax=ax[1],
+)
+
+### Save image crops and segmentations
+for crop, obs in itertools.islice(
+    img.generate_spot_crops(
+        adata, obs_names=adata.obs_names, return_obs=True, as_array=False
+    ),
+    2,
+):
+    fig, axes = plt.subplots(1, 2)
+    crop.show("image_smooth", ax=axes[0])
+    crop.show("segmented_watershed", ax=axes[1], cmap="Greys")
+    plt.show()
+
+### CellProfiler interactive GUI
 
