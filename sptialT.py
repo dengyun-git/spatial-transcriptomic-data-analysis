@@ -187,6 +187,8 @@ sq.pl.nhood_enrichment(
 # --------------------------------
 # Neighborhood Enrichment Clusters
 # --------------------------------
+### enrichment score based on proximity on the connectivity graph of cell clusters. The number of observed events is compared against
+###  permutations and a z-score is computed
 n_clusters = [4]
 df_nhood_enr = pd.DataFrame(
     adata.uns["leiden_nhood_enrichment"]["zscore"],
