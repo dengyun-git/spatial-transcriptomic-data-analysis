@@ -15,12 +15,15 @@ from anndata import AnnData
 #-------------------------------
 # Load  Data into AnnData Object
 #-------------------------------
-### read in AnnData object adata
+### read in AnnData object adata. Toy data was downloaded from https://db.cngb.org/stomics/
+'''
 adata = sq.read.vizgen(
     "tutorial_data",
     counts_file="Liver1Slice1_cell_by_gene.csv",
     meta_file="Liver1Slice1_cell_metadata.csv",
 )
+'''
+adata = sc.read_h5ad("/Users/ydeng/Documents/scRNA&spatial omics analysis/MaizeEar_scRNA.h5ad").T
 
 ### calculate QC matrix
 adata.var_names_make_unique() ### make gene name unique
@@ -51,7 +54,13 @@ sc.tl.umap(adata) # display cells on UMAP
 sc.tl.leiden(adata, resolution=resolution) # clusters of cells using Leiden clustering
 
 sc.set_figure_params(figsize=(10, 10))
-sc.pl.umap(adata, color=["leiden"], size=5)
+sc.pl.umap(adata, color=["leiden"], size=10)
+
+### I directly access the adata obejct to plot whatever I want to view
+plt.scatter(adata.obsm["X_pca"][:,1],adata.obsm["X_pca"][:,2])
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.title('Scatter Plot')
 
 # -------------------------------
 # Spatial Distributions of Cells
@@ -203,7 +212,7 @@ df_cluster = pd.DataFrame(
 )
 
 inst_level = "Level-" + str(n_clusters[0])
-all_clusters = list(df_cluster[inst_level].unique())
+all_clusters = list(df_cluster[inst_level].unique()):queue
 # sc.set_figure_params(figsize=(10,10))
 for inst_cluster in all_clusters:
     inst_clusters = df_cluster[df_cluster[inst_level] == inst_cluster].index.tolist()
@@ -304,6 +313,7 @@ bot_autocorr = (
 sq.pl.spatial_scatter(
     adata, color=top_autocorr, size=20, cmap="Reds", img=False, figsize=(5, 5)
 )
+
 # top cell types based on average expression of top_autocorr genes
 sig_leiden.loc[top_autocorr].mean(axis=0).sort_values(ascending=False).index.tolist()[
     :5
