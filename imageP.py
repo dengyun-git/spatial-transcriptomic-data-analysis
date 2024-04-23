@@ -342,3 +342,19 @@ for crop, obs in itertools.islice(
 
 ### CellProfiler interactive GUI
 
+#-----------------------------
+#-----------------------------
+# Exploration of Segmentation
+#-----------------------------
+#-----------------------------
+### MATLAB applied Color-Based Segmentation Using K-Means Clustering
+### with clearly demonstrated example for H&E images
+
+
+#-----------------------------
+#-----------------------------
+# Exploration of Deep Learning
+#-----------------------------
+#-----------------------------
+### MATLAB has a package called CycleGAN, which can generate high-quality high-dose computed tomography (CT) images from noisy low-dose CT images adopt deep learning
+
